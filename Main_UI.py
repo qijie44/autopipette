@@ -1,38 +1,39 @@
+#TODO currently experiencing issues with canvas/frames, if reusing this code, forgo the resizing canvas and change everything to frames
+
 import tkinter as tk
 
 
-pages = {main_page}
-
-class main(tk.Tk):
+class Main(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        tk.Tk.wm_title(self, "automated pipette")
+        tk.Tk.wm_title(self, "Automated Pipette")
 
         # Taking the screen dimensions and setting the window to the dimensions
-        main.screen_width = self.winfo_screenwidth()
-        main.screen_height = self.winfo_screenheight()
-        self.geometry('%dx%d+%d+%d' % (main.screen_width, main.screen_height - 70, -10, 0))
+        Main.screen_width = self.winfo_screenwidth()
+        Main.screen_height = self.winfo_screenheight()
+        self.geometry('%dx%d+%d+%d' % (Main.screen_width, Main.screen_height - 70, -10, 0))
+        # TODO: import the read_config file after merging this branch back
 
         # Creating a main container that will contain all the different pages
         # TODO: check if this even works
-        main_container = ResizingCanvas(self, width=main.screen_width, height=main.screen_height - 70,
+        main_container = ResizingCanvas(self, width=Main.screen_width, height=Main.screen_height - 70,
                                         highlightthickness=0)
         main_container.pack(side="top", fill="both", expand=True)
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
+        main_container.grid_rowconfigure(0, weight=1)
+        main_container.grid_columnconfigure(0, weight=1)
 
         # create an empty dictionary for frame references
         self.frames = {}
 
-        for page in pages:
+        for page in (StartPage, TempPage):
             # initialise the frames
-            frame = page(container, self)
+            frame = page(main_container, self)
             # write the frame to the dictionary
             self.frames[page] = frame
             # TODO: check if this line: creates a grid in the frame for putting things in OR put all of the pages in the same location
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame("StartPage")
+        self.show_frame(StartPage)
 
     def show_frame(self, controller):
         frame = self.frames[controller]
@@ -43,12 +44,33 @@ class main(tk.Tk):
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Automated Pipetting Controller")
+        label = tk.Label(self, text="Automated Pipetting Controller", anchor="center", borderwidth=5, relief="groove")
+        label.grid(column= 1)
 
-    def button_frame(self):
+        eppendorf_frame = self.button_frame("left")
+        solutions_frame = self.button_frame("right")
+
+        eppendorf_frame.tkraise()
+        solutions_frame.tkraise()
+
+
+    def button_frame(self, side):
         # Todo : write this dynamic button generation function
-        pass
+        frame = tk.Frame(self, bg = "grey")
+        if side == "left":
+            frame.grid(row=0, column=0, padx=10, pady=5)
+        elif side == "right":
+            frame.grid(row=0, column=0, padx=10, pady=5)
 
+        button = tk.Button(self, text = "test")
+
+        button.grid()
+
+        return frame
+
+class TempPage(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
 
 class ResizingCanvas(tk.Canvas):
     def __init__(self, parent, **kwargs):
@@ -69,5 +91,5 @@ class ResizingCanvas(tk.Canvas):
         self.scale("all", 0, 0, wscale, hscale)
 
 
-master = main()
+master = Main()
 master.mainloop()
