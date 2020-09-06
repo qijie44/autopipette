@@ -45,10 +45,13 @@ class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Automated Pipetting Controller", anchor="center", borderwidth=5, relief="groove")
-        label.grid(column= 1)
+        label.grid(columnspan=2)
 
         eppendorf_frame = self.button_frame("left")
         solutions_frame = self.button_frame("right")
+
+        eppendorf_frame.grid(row=1, column=0, padx=10, pady=5)
+        solutions_frame.grid(row=1, column=1, padx=10, pady=5)
 
         eppendorf_frame.tkraise()
         solutions_frame.tkraise()
@@ -62,13 +65,14 @@ class StartPage(tk.Frame):
         elif side == "right":
             frame.grid(row=0, column=0, padx=10, pady=5)
 
-        button = tk.Button(self, text = "test")
-
+        # The following is just test code
+        button = tk.Button(frame, text = "test")
         button.grid()
 
         return frame
 
 class TempPage(tk.Frame):
+    # This is currently unused, just so that the pages code don't throw a fit
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
