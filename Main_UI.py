@@ -45,22 +45,30 @@ class Main(tk.Tk):
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Automated Pipetting Controller", anchor="center", borderwidth=5, relief="groove")
+        label = tk.Label(self, text="Automated Pipetting Controller", anchor="center")
         label.grid(columnspan=2)
         self.info_frame = False
 
+        # Making that the rows and columns are a percentage of the screens
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=8)
+        self.grid_rowconfigure(2, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+
+
         self.eppendorf_frame = self.button_frame("eppendorf")
         self.solutions_frame = self.button_frame("solution")
-        self.information_frame = tk.Frame(self, bg="green", width=50, height=10)
+        self.information_frame = tk.Frame(self, bg="green")
 
-        self.eppendorf_frame.grid(row=1, column=0, padx=10, pady=5)
-        self.solutions_frame.grid(row=1, column=1, padx=10, pady=5)
-        self.information_frame.grid(row=1, column=1, padx=10, pady=5)
+        self.eppendorf_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
+        self.solutions_frame.grid(row=1, column=1, padx=10, pady=5, sticky="nsew")
+        self.information_frame.grid(row=1, column=1, padx=10, pady=5, sticky="nsew")
         button = tk.Button(self.information_frame, text = "information")
         button.grid()
 
         self.information_toggle_button = tk.Button(self, text="Information", command=self.toggle_info_frame)
-        self.information_toggle_button.grid(row=2)
+        self.information_toggle_button.grid(row=2, column=1)
 
         self.eppendorf_frame.tkraise()
         self.solutions_frame.tkraise()
@@ -68,7 +76,7 @@ class StartPage(tk.Frame):
 
     def button_frame(self, side):
         # Todo : write this dynamic button generation function
-        frame = tk.Frame(self, bg="blue", width=Main.screen_width/2, height=100)
+        frame = tk.Frame(self, bg="blue")
 
         # The following is just test code
         button = tk.Button(frame, text = "test")
@@ -76,6 +84,7 @@ class StartPage(tk.Frame):
 
         return frame
 
+    # this is just code to change the frames and toggle the button text
     def toggle_info_frame(self):
         if self.info_frame:
             self.info_frame = False
