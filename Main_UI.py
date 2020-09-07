@@ -10,12 +10,13 @@ class Main(tk.Tk):
 
         # Taking the screen dimensions and setting the window to the dimensions
         Main.screen_width = self.winfo_screenwidth()
+        print(Main.screen_width)
         Main.screen_height = self.winfo_screenheight()
         self.geometry('%dx%d+%d+%d' % (Main.screen_width, Main.screen_height - 70, -10, 0))
         # TODO: import the read_config file after merging this branch back
 
         # Creating a main container that will contain all the different pages
-        # TODO: check if this even works
+        # TODO: check if this ResizingCanvas even works (nope)
         main_container = ResizingCanvas(self, width=Main.screen_width, height=Main.screen_height - 70,
                                         highlightthickness=0)
         main_container.pack(side="top", fill="both", expand=True)
@@ -46,30 +47,45 @@ class StartPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Automated Pipetting Controller", anchor="center", borderwidth=5, relief="groove")
         label.grid(columnspan=2)
+        self.info_frame = False
 
-        eppendorf_frame = self.button_frame("left")
-        solutions_frame = self.button_frame("right")
+        self.eppendorf_frame = self.button_frame("eppendorf")
+        self.solutions_frame = self.button_frame("solution")
+        self.information_frame = tk.Frame(self, bg="green", width=50, height=10)
 
-        eppendorf_frame.grid(row=1, column=0, padx=10, pady=5)
-        solutions_frame.grid(row=1, column=1, padx=10, pady=5)
+        self.eppendorf_frame.grid(row=1, column=0, padx=10, pady=5)
+        self.solutions_frame.grid(row=1, column=1, padx=10, pady=5)
+        self.information_frame.grid(row=1, column=1, padx=10, pady=5)
+        button = tk.Button(self.information_frame, text = "information")
+        button.grid()
 
-        eppendorf_frame.tkraise()
-        solutions_frame.tkraise()
+        self.information_toggle_button = tk.Button(self, text="Information", command=self.toggle_info_frame)
+        self.information_toggle_button.grid(row=2)
+
+        self.eppendorf_frame.tkraise()
+        self.solutions_frame.tkraise()
 
 
     def button_frame(self, side):
         # Todo : write this dynamic button generation function
-        frame = tk.Frame(self, bg = "grey")
-        if side == "left":
-            frame.grid(row=0, column=0, padx=10, pady=5)
-        elif side == "right":
-            frame.grid(row=0, column=0, padx=10, pady=5)
+        frame = tk.Frame(self, bg="blue", width=Main.screen_width/2, height=100)
 
         # The following is just test code
         button = tk.Button(frame, text = "test")
         button.grid()
 
         return frame
+
+    def toggle_info_frame(self):
+        if self.info_frame:
+            self.info_frame = False
+            self.information_toggle_button.config(text="Solutions")
+            self.information_frame.tkraise()
+        else:
+            self.info_frame = True
+            self.information_toggle_button.config(text="Information")
+            self.solutions_frame.tkraise()
+
 
 class TempPage(tk.Frame):
     # This is currently unused, just so that the pages code don't throw a fit
