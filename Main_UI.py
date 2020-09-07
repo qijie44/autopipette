@@ -47,7 +47,7 @@ class StartPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Automated Pipetting Controller", anchor="center")
         label.grid(columnspan=2)
-        self.info_frame = False
+        self.info_frame = True
 
         # Making that the rows and columns are a percentage of the screens
         self.grid_rowconfigure(0, weight=1)
