@@ -52,30 +52,30 @@ class StartPage(tk.Frame):
 
         # Making that the rows and columns are a percentage of the screens
         self.grid_rowconfigure(0, weight=1)
-        self.grid_rowconfigure(1, weight=8)
-        self.grid_rowconfigure(2, weight=1)
+        self.grid_rowconfigure(1, weight=16)
+        self.grid_rowconfigure(2, weight=2)
         self.grid_columnconfigure(0, weight=2)
         self.grid_columnconfigure(1, weight=2)
 
-
+        # Creating the frames for the windows
         self.eppendorf_frame = self.button_frame("eppendorf")
         self.solutions_frame = self.button_frame("solution")
         self.information_frame = tk.Frame(self, bg="grey")
         self.options_frame = tk.Frame(self)
 
-        self.eppendorf_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
-        self.solutions_frame.grid(row=1, column=1, padx=10, pady=5, sticky="nsew")
-        self.information_frame.grid(row=1, column=1, padx=10, pady=5, sticky="nsew")
-        self.options_frame.grid(row=2, column=1, sticky="nsew")
+        self.eppendorf_frame.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
+        self.solutions_frame.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
+        self.information_frame.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
+        self.options_frame.grid(row=2, column=1, padx=5, pady=5, sticky="ne")
 
-        self.information_toggle_button = tk.Button(self.options_frame, text="Information", command=self.toggle_info_frame)
+        self.information_toggle_button = tk.Button(self.options_frame, text="Information", command=self.toggle_info_frame, width=10)
 
-        #TODO add the load configs functionaity
+        #TODO add the load configs functionality
         self.load_eppendorf_config_button = tk.Button(self.options_frame, text="Load eppendorfs", commands=self.load_configs("eppendorfs"))
         self.load_solutions_config_button = tk.Button(self.options_frame, text="Load solutions", commands=self.load_configs("solutions"))
-        self.information_toggle_button.grid(row=0, column=0)
-        self.load_eppendorf_config_button.grid(row=0, column=1)
-        self.load_solutions_config_button.grid(row=0, column=2)
+        self.load_eppendorf_config_button.grid(row=0, column=0)
+        self.load_solutions_config_button.grid(row=0, column=1)
+        self.information_toggle_button.grid(row=0, column=2)
 
         #info_label = Label
 
