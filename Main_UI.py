@@ -1,12 +1,17 @@
 #TODO currently experiencing issues with canvas/frames, if reusing this code, forgo the resizing canvas and change everything to frames
 
 import tkinter as tk
+from load_config import load_config
 
 
 class Main(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         tk.Tk.wm_title(self, "Automated Pipette")
+
+        #load the configs on startup
+        self.eppendorf_data = load_config("eppendorf")
+        self.solutions_data = load_config("solutions")
 
         # Taking the screen dimensions and setting the window to the dimensions
         Main.screen_width = self.winfo_screenwidth()
@@ -71,8 +76,8 @@ class StartPage(tk.Frame):
         self.information_toggle_button = tk.Button(self.options_frame, text="Information", command=self.toggle_info_frame, width=10)
 
         #TODO add the load configs functionality
-        self.load_eppendorf_config_button = tk.Button(self.options_frame, text="Load eppendorfs", commands=self.load_configs("eppendorfs"))
-        self.load_solutions_config_button = tk.Button(self.options_frame, text="Load solutions", commands=self.load_configs("solutions"))
+        self.load_eppendorf_config_button = tk.Button(self.options_frame, text="Load eppendorfs", commands=self.change_configs("eppendorfs"))
+        self.load_solutions_config_button = tk.Button(self.options_frame, text="Load solutions", commands=self.change_configs("solutions"))
         self.load_eppendorf_config_button.grid(row=0, column=0)
         self.load_solutions_config_button.grid(row=0, column=1)
         self.information_toggle_button.grid(row=0, column=2)
@@ -104,8 +109,8 @@ class StartPage(tk.Frame):
             self.information_toggle_button.config(text="Information")
             self.solutions_frame.tkraise()
 
-    def load_configs(self, temp):
-        #modify or remove this function when modifiying the load_config library
+    def change_configs(self, temp):
+        #TODO create a window to select the config file to select
         pass
 
 
