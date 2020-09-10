@@ -72,9 +72,9 @@ class StartPage(tk.Frame):
 
         # TODO: Update the function below after writing the change_config function
         self.load_eppendorf_config_button = tk.Button(self.options_frame, text="Load eppendorfs",
-                                                      commands=self.change_configs("eppendorfs"))
+                                                      command=lambda: self.change_configs("eppendorfs"))
         self.load_solutions_config_button = tk.Button(self.options_frame, text="Load solutions",
-                                                      commands=self.change_configs("solutions"))
+                                                      command=lambda: self.change_configs("solutions"))
         self.information_toggle_button = tk.Button(self.options_frame, text="Information",
                                                    command=self.toggle_info_frame, width=10)
         self.save_to_file_button = tk.Button(self.options_frame, text="Save to File",
@@ -98,7 +98,7 @@ class StartPage(tk.Frame):
             self.eppendorf_circles(button_canvas)
         elif frame_type == "solution":
             self.solutions_circle(button_canvas)
-            add_solution_button = tk.Button(frame, text="Add Solutions", commands=self.add_solutions())
+            add_solution_button = tk.Button(frame, text="Add Solutions", command=self.add_solutions)
             button_canvas.create_window(button_canvas.width-(button_canvas.width/15), button_canvas.height-5, window=add_solution_button)
         else:
             raise Exception("Unknown Frame!")
@@ -136,6 +136,7 @@ class StartPage(tk.Frame):
 
     def add_solutions(self):
         #TODO add add_solutions functionality
+        print("hi")
         pass
 
     def eppendorf_circles(self, canvas):
