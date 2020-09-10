@@ -1,5 +1,3 @@
-#TODO currently experiencing issues with canvas/frames, if reusing this code, forgo the resizing canvas and change everything to frames
-
 import tkinter as tk
 from load_config import load_config
 
@@ -9,7 +7,7 @@ class Main(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         tk.Tk.wm_title(self, "Automated Pipette")
 
-        #load the configs on startup
+        # load the configs on startup
         Main.eppendorf_data = load_config("Eppendorfs.csv")
         Main.solutions_data = load_config("Solutions.csv")
 
@@ -17,10 +15,8 @@ class Main(tk.Tk):
         Main.screen_width = self.winfo_screenwidth()
         Main.screen_height = self.winfo_screenheight()
         self.geometry('%dx%d+%d+%d' % (Main.screen_width, Main.screen_height - 70, -10, 0))
-        # TODO: import the read_config file after merging this branch back
 
         # Creating a main container that will contain all the different pages
-        # TODO: check if this ResizingCanvas even works (nope)
         main_container = ResizingCanvas(self, width=Main.screen_width, height=Main.screen_height - 70,
                                         highlightthickness=0)
         main_container.pack(side="top", fill="both", expand=True)
@@ -73,8 +69,7 @@ class StartPage(tk.Frame):
         self.options_frame.grid(row=2, column=1, padx=5, pady=5, sticky="ne")
 
         self.information_toggle_button = tk.Button(self.options_frame, text="Information", command=self.toggle_info_frame, width=10)
-
-        #TODO add the load configs functionality
+        # TODO: Update the function below after writing the change_config function
         self.load_eppendorf_config_button = tk.Button(self.options_frame, text="Load eppendorfs", commands=self.change_configs("eppendorfs"))
         self.load_solutions_config_button = tk.Button(self.options_frame, text="Load solutions", commands=self.change_configs("solutions"))
         self.load_eppendorf_config_button.grid(row=0, column=0)
@@ -86,21 +81,20 @@ class StartPage(tk.Frame):
         self.eppendorf_frame.tkraise()
         self.solutions_frame.tkraise()
 
-
     def button_frame(self, type):
         # Todo : write this dynamic button generation function
-        frame = tk.Frame(self, width=int(Main.screen_width/2), height=int(Main.screen_height*2/3), bg="grey")
+        frame = tk.Frame(self, width=int(Main.screen_width/2), height=int(Main.screen_height*2/3), bg="grey", highlightbackground="black", highlightthickness=1)
         button_canvas = ResizingCanvas(frame)
 
         if type == "eppendorf":
-            pass
+            self.eppendorf_circles(button_canvas)
         elif type == "solution":
             self.solutions_circle(button_canvas)
             add_solution_button = tk.Button(frame, text="Add Solutions", commands=self.add_solutions())
-            button_canvas.pack()
-            button_canvas.create_window(button_canvas.width-15, button_canvas.height-10, window=add_solution_button)
+            button_canvas.create_window(button_canvas.width-(button_canvas.width/15), button_canvas.height-5, window=add_solution_button)
         else:
             raise FrameError("Unknown Frame!")
+        button_canvas.pack()
 
         return frame
 
@@ -109,12 +103,15 @@ class StartPage(tk.Frame):
         radius = 50
         max_x, max_y = self.get_max(Main.solutions_data)
         for k,v in Main.solutions_data.items():
-            x_position = (canvas.width/(max_x+1))*v[2]+1
+            # generate the position of the circles the +3 is to remove the clipping
+            x_position = (canvas.width/(max_x+1))*v[2]+canvas.width/100
             # minusing 10 to add a button at the bottom
-            y_position = ((canvas.height-10)/(max_y+1))*v[3]+1
+            y_position = ((canvas.height-10)/(max_y+1))*v[3]+canvas.width/100
             canvas.create_oval(x_position, y_position, x_position+radius, y_position+radius, fill=color)
+            # labelling the circles
             label = tk.Label(canvas, text=k, bg=color)
             canvas.create_window(x_position+25, y_position+15, window=label)
+            # creating the entry boxes and tying them to the solutions data dictionary
             Main.solutions_data[k].append(tk.Entry(width="10"))
             canvas.create_window(x_position+25, y_position+25, window=Main.solutions_data[k][4])
 
@@ -134,7 +131,13 @@ class StartPage(tk.Frame):
         pass
 
     def eppendorf_circles(self, canvas):
-        pass
+        radius = 10
+        max_x, max_y = self.get_max(Main.eppendorf_data)
+        for k,v in Main.eppendorf_data.items():
+            # generate the position of the circles
+            x_position = (canvas.width/(max_x+1))*v[2]
+            y_position = ((canvas.height)/(max_y+1))*v[3]
+            canvas.create_oval(x_position, y_position, x_position+radius, y_position+radius, fill="grey")
 
     # this is just code to change the frames and toggle the button text
     def toggle_info_frame(self):
