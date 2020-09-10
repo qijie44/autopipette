@@ -115,7 +115,8 @@ class StartPage(tk.Frame):
             canvas.create_oval(x_position, y_position, x_position+radius, y_position+radius, fill=color)
             label = tk.Label(canvas, text=k, bg=color)
             canvas.create_window(x_position+25, y_position+15, window=label)
-            #globals()
+            locals()[k] = tk.Entry(width="10")
+            canvas.create_window(x_position+25, y_position+25, window=locals()[k])
 
 
     def get_max(self, dictionary):
