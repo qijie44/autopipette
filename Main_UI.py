@@ -96,9 +96,9 @@ class StartPage(tk.Frame):
             pass
         elif type == "solution":
             self.solutions_circle(button_canvas)
-            add_solution_button = tk.Button()
+            add_solution_button = tk.Button(frame, text="Add Solutions", commands=self.add_solutions())
             button_canvas.pack()
-            add_solution_button.pack()
+            button_canvas.create_window(button_canvas.width-15, button_canvas.height-10, window=add_solution_button)
         else:
             raise FrameError("Unknown Frame!")
 
@@ -110,7 +110,8 @@ class StartPage(tk.Frame):
         max_x, max_y = self.get_max(Main.solutions_data)
         for k,v in Main.solutions_data.items():
             x_position = (canvas.width/(max_x+1))*v[2]+1
-            y_position = (canvas.height/(max_y+1))*v[3]+1
+            # minusing 10 to add a button at the bottom
+            y_position = ((canvas.height-10)/(max_y+1))*v[3]+1
             canvas.create_oval(x_position, y_position, x_position+radius, y_position+radius, fill=color)
             label = tk.Label(canvas, text=k, bg=color)
             canvas.create_window(x_position+25, y_position+15, window=label)
@@ -127,6 +128,9 @@ class StartPage(tk.Frame):
                 max_y = v[3]
 
         return max_x, max_y
+
+    def add_solutions(self):
+        pass
 
     # this is just code to change the frames and toggle the button text
     def toggle_info_frame(self):
