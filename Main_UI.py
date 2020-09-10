@@ -96,20 +96,26 @@ class StartPage(tk.Frame):
             pass
         elif type == "solution":
             self.solutions_circle(button_canvas)
+            add_solution_button = tk.Button()
+            button_canvas.pack()
+            add_solution_button.pack()
         else:
             raise FrameError("Unknown Frame!")
 
         return frame
 
     # the following are button codes and their dependencies
-    def solutions_circle(self, canvas):
-        radius = 30
+    def solutions_circle(self, canvas, color="grey"):
+        radius = 50
         max_x, max_y = self.get_max(Main.solutions_data)
         for k,v in Main.solutions_data.items():
-            x_position = (canvas.width/max_x+2)*v[2]
-            y_position = (canvas.height/max_y+2)*v[3]
-            canvas.create_oval(x_position, y_position, x_position+radius, y_position+radius, fill="grey")
-            print(x_position)
+            x_position = (canvas.width/(max_x+1))*v[2]+1
+            y_position = (canvas.height/(max_y+1))*v[3]+1
+            canvas.create_oval(x_position, y_position, x_position+radius, y_position+radius, fill=color)
+            label = tk.Label(canvas, text=k, bg=color)
+            canvas.create_window(x_position+25, y_position+15, window=label)
+            #globals()
+
 
     def get_max(self, dictionary):
         max_x = 0
