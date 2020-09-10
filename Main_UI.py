@@ -98,6 +98,7 @@ class StartPage(tk.Frame):
 
         return frame
 
+
     # this is just code to change the frames and toggle the button text
     def toggle_info_frame(self):
         if self.info_frame:
