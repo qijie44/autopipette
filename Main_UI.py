@@ -112,7 +112,7 @@ class StartPage(tk.Frame):
             label = tk.Label(canvas, text=k, bg=color)
             canvas.create_window(x_position+25, y_position+15, window=label)
             # creating the entry boxes and tying them to the solutions data dictionary
-            Main.solutions_data[k].append(tk.Entry(width="10"))
+            Main.solutions_data[k].append(tk.Entry(canvas, width="10"))
             canvas.create_window(x_position+25, y_position+25, window=Main.solutions_data[k][4])
 
     def get_max(self, dictionary):
