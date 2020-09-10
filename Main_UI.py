@@ -10,12 +10,11 @@ class Main(tk.Tk):
         tk.Tk.wm_title(self, "Automated Pipette")
 
         #load the configs on startup
-        self.eppendorf_data = load_config("eppendorf")
-        self.solutions_data = load_config("solutions")
+        Main.eppendorf_data = load_config("Eppendorfs.csv")
+        Main.solutions_data = load_config("Solutions.csv")
 
         # Taking the screen dimensions and setting the window to the dimensions
         Main.screen_width = self.winfo_screenwidth()
-        print(Main.screen_width)
         Main.screen_height = self.winfo_screenheight()
         self.geometry('%dx%d+%d+%d' % (Main.screen_width, Main.screen_height - 70, -10, 0))
         # TODO: import the read_config file after merging this branch back
@@ -59,8 +58,8 @@ class StartPage(tk.Frame):
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=16)
         self.grid_rowconfigure(2, weight=2)
-        self.grid_columnconfigure(0, weight=2)
-        self.grid_columnconfigure(1, weight=2)
+        self.grid_columnconfigure(0, weight=5)
+        self.grid_columnconfigure(1, weight=5)
 
         # Creating the frames for the windows
         self.eppendorf_frame = self.button_frame("eppendorf")
@@ -88,16 +87,40 @@ class StartPage(tk.Frame):
         self.solutions_frame.tkraise()
 
 
-    def button_frame(self, side):
+    def button_frame(self, type):
         # Todo : write this dynamic button generation function
-        frame = tk.Frame(self, bg="grey")
+        frame = tk.Frame(self, width=int(Main.screen_width/2), height=int(Main.screen_height*2/3), bg="grey")
+        button_canvas = ResizingCanvas(frame)
 
-        # The following is just test code
-        button = tk.Button(frame, text = "test")
-        button.grid()
+        if type == "eppendorf":
+            pass
+        elif type == "solution":
+            self.solutions_circle(button_canvas)
+        else:
+            raise FrameError("Unknown Frame!")
 
         return frame
 
+    # the following are button codes and their dependencies
+    def solutions_circle(self, canvas):
+        radius = 30
+        max_x, max_y = self.get_max(Main.solutions_data)
+        for k,v in Main.solutions_data.items():
+            x_position = (canvas.width/max_x+2)*v[2]
+            y_position = (canvas.height/max_y+2)*v[3]
+            canvas.create_oval(x_position, y_position, x_position+radius, y_position+radius, fill="grey")
+            print(x_position)
+
+    def get_max(self, dictionary):
+        max_x = 0
+        max_y = 0
+        for k, v in dictionary.items():
+            if v[2] > max_x:
+                max_x = v[2]
+            if v[3] > max_y:
+                max_y = v[3]
+
+        return max_x, max_y
 
     # this is just code to change the frames and toggle the button text
     def toggle_info_frame(self):
