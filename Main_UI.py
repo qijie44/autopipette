@@ -1,6 +1,8 @@
 import tkinter as tk
 from load_config import load_config
 
+unselected_color = "white"
+selected_color = "grey"
 
 class Main(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -68,32 +70,38 @@ class StartPage(tk.Frame):
         self.information_frame.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
         self.options_frame.grid(row=2, column=1, padx=5, pady=5, sticky="ne")
 
-        self.information_toggle_button = tk.Button(self.options_frame, text="Information", command=self.toggle_info_frame, width=10)
         # TODO: Update the function below after writing the change_config function
-        self.load_eppendorf_config_button = tk.Button(self.options_frame, text="Load eppendorfs", commands=self.change_configs("eppendorfs"))
-        self.load_solutions_config_button = tk.Button(self.options_frame, text="Load solutions", commands=self.change_configs("solutions"))
+        self.load_eppendorf_config_button = tk.Button(self.options_frame, text="Load eppendorfs",
+                                                      commands=self.change_configs("eppendorfs"))
+        self.load_solutions_config_button = tk.Button(self.options_frame, text="Load solutions",
+                                                      commands=self.change_configs("solutions"))
+        self.information_toggle_button = tk.Button(self.options_frame, text="Information",
+                                                   command=self.toggle_info_frame, width=10)
+        self.save_to_file_button = tk.Button(self.options_frame, text="Save to File",
+                                                   command=self.save_to_file, width=10)
         self.load_eppendorf_config_button.grid(row=0, column=0)
         self.load_solutions_config_button.grid(row=0, column=1)
         self.information_toggle_button.grid(row=0, column=2)
+        self.save_to_file_button.grid(row=0, column=3)
 
         #info_label = Label
 
         self.eppendorf_frame.tkraise()
         self.solutions_frame.tkraise()
 
-    def button_frame(self, type):
-        # Todo : write this dynamic button generation function
-        frame = tk.Frame(self, width=int(Main.screen_width/2), height=int(Main.screen_height*2/3), bg="grey", highlightbackground="black", highlightthickness=1)
+    def button_frame(self, frame_type):
+        frame = tk.Frame(self, width=int(Main.screen_width / 2), height=int(Main.screen_height * 2 / 3), bg="grey",
+                         highlightbackground="black", highlightthickness=1)
         button_canvas = ResizingCanvas(frame)
 
-        if type == "eppendorf":
+        if frame_type == "eppendorf":
             self.eppendorf_circles(button_canvas)
-        elif type == "solution":
+        elif frame_type == "solution":
             self.solutions_circle(button_canvas)
             add_solution_button = tk.Button(frame, text="Add Solutions", commands=self.add_solutions())
             button_canvas.create_window(button_canvas.width-(button_canvas.width/15), button_canvas.height-5, window=add_solution_button)
         else:
-            raise FrameError("Unknown Frame!")
+            raise Exception("Unknown Frame!")
         button_canvas.pack()
 
         return frame
@@ -111,7 +119,7 @@ class StartPage(tk.Frame):
             # labelling the circles
             label = tk.Label(canvas, text=k, bg=color)
             canvas.create_window(x_position+25, y_position+15, window=label)
-            # creating the entry boxes and tying them to the solutions data dictionary
+            # creating the entry boxes and tying them to the solutions data dictionary (this is 4 on the list)
             Main.solutions_data[k].append(tk.Entry(canvas, width="10"))
             canvas.create_window(x_position+25, y_position+25, window=Main.solutions_data[k][4])
 
@@ -137,7 +145,26 @@ class StartPage(tk.Frame):
             # generate the position of the circles
             x_position = (canvas.width/(max_x+1))*v[2]
             y_position = ((canvas.height)/(max_y+1))*v[3]
-            canvas.create_oval(x_position, y_position, x_position+radius, y_position+radius, fill="grey")
+            # instantiate the buttons as false and write to eppendorf data (this is 4 on the list)
+            Main.eppendorf_data[k].append(False)
+            # write the button object to the eppendorf data (this is 5 on the list)
+            Main.eppendorf_data[k].append(canvas.create_oval(x_position, y_position, x_position+radius, y_position+radius, fill=unselected_color))
+            canvas.tag_bind(Main.eppendorf_data[k][5], "<Button-1>", lambda event, k=k, canvas=canvas: self.eppendorf_toggle(canvas, k))
+
+    # toggles the value of the eppendorf button and runs the set color function
+    def eppendorf_toggle(self, canvas, k):
+        if Main.eppendorf_data[k][4]:
+            Main.eppendorf_data[k][4] = False
+        else:
+            Main.eppendorf_data[k][4] = True
+        self.set_color(canvas)
+
+    def set_color(self, canvas):
+        for k,v in Main.eppendorf_data.items():
+            if Main.eppendorf_data[k][4]:
+                canvas.itemconfig(Main.eppendorf_data[k][5], fill=selected_color)
+            else:
+                canvas.itemconfig(Main.eppendorf_data[k][5], fill=unselected_color)
 
     # this is just code to change the frames and toggle the button text
     def toggle_info_frame(self):
@@ -151,7 +178,11 @@ class StartPage(tk.Frame):
             self.solutions_frame.tkraise()
 
     def change_configs(self, temp):
-        #TODO create a window to select the config file to select
+        # TODO create a window to select the config file to select
+        pass
+
+    def save_to_file(self):
+        # TODO write the save to file function or pass this to a wrapper
         pass
 
 
