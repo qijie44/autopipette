@@ -39,7 +39,7 @@ def load_config(filename):
             for row in file:
                 # if there isn't an alias for the solution
                 if row[2] != '':
-                    named_coordinates[row[2]] = [row[0], row[1], x_coordinates.index(row[0]), y_coordinates.index(row[1])]
+                    named_coordinates["{} ({})".format(chr(ord('@')+(x_coordinates.index(row[0])+1))+str(y_coordinates.index(row[1])+1), row[2])] = [row[0], row[1], x_coordinates.index(row[0]), y_coordinates.index(row[1])]
                 else:
                     named_coordinates[chr(ord('@')+(x_coordinates.index(row[0])+1))+str(y_coordinates.index(row[1])+1)] = [row[0], row[1], x_coordinates.index(row[0]), y_coordinates.index(row[1])]
 
