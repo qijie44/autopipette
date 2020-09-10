@@ -25,13 +25,14 @@ def load_config(filename):
 
             for row in file:
                 if row[0] not in x_coordinates:
-                    x_coordinates.append(row[0])
+                    x_coordinates.append(float(row[0]))
                 if row[1] not in y_coordinates:
-                    y_coordinates.append(row[1])
+                    y_coordinates.append(float(row[1]))
 
             # sorting the coordinates so that we know what's the name
             x_coordinates.sort()
             y_coordinates.sort()
+
             #bringing the header back to the start of the file and skipping headers again
             csvfile.seek(0)
             next(file)
@@ -39,9 +40,9 @@ def load_config(filename):
             for row in file:
                 # if there isn't an alias for the solution
                 if row[2] != '':
-                    named_coordinates["{} ({})".format(chr(ord('@')+(x_coordinates.index(row[0])+1))+str(y_coordinates.index(row[1])+1), row[2])] = [row[0], row[1], x_coordinates.index(row[0]), y_coordinates.index(row[1])]
+                    named_coordinates["{} ({})".format(chr(ord('@')+(x_coordinates.index(float(row[0]))+1))+str(y_coordinates.index(float(row[1]))+1), row[2])] = [row[0], row[1], x_coordinates.index(float(row[0])), y_coordinates.index(float(row[1]))]
                 else:
-                    named_coordinates[chr(ord('@')+(x_coordinates.index(row[0])+1))+str(y_coordinates.index(row[1])+1)] = [row[0], row[1], x_coordinates.index(row[0]), y_coordinates.index(row[1])]
+                    named_coordinates[chr(ord('@')+(x_coordinates.index(float(row[0]))+1))+str(y_coordinates.index(float(row[1]))+1)] = [row[0], row[1], x_coordinates.index(float(row[0])), y_coordinates.index(float(row[1]))]
 
         # close the file
         csvfile.close()

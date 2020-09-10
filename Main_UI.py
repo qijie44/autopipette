@@ -108,20 +108,21 @@ class StartPage(tk.Frame):
 
     # the following are button codes and their dependencies
     def solutions_circle(self, canvas, color="grey"):
-        radius = 50
+        radius = 44
         max_x, max_y = self.get_max(Main.solutions_data)
         for k,v in Main.solutions_data.items():
+            # TODO: Look into direct mapping instead of grid mode
             # generate the position of the circles the +3 is to remove the clipping
-            x_position = (canvas.width/(max_x+1))*v[2]+canvas.width/100
-            # minusing 10 to add a button at the bottom
-            y_position = ((canvas.height-10)/(max_y+1))*v[3]+canvas.width/100
+            x_position = ((canvas.width-radius/2)/(max_x+1))*v[2]+canvas.width/100
+            # minusing 10 to add a button at the bottom, along with allowing space for the circles
+            y_position = ((canvas.height-10-radius/2)/(max_y+1))*v[3]+canvas.width/100
             canvas.create_oval(x_position, y_position, x_position+radius, y_position+radius, fill=color)
             # labelling the circles
             label = tk.Label(canvas, text=k, bg=color)
-            canvas.create_window(x_position+25, y_position+15, window=label)
+            canvas.create_window(x_position+(radius/2), y_position+15, window=label)
             # creating the entry boxes and tying them to the solutions data dictionary (this is 4 on the list)
             Main.solutions_data[k].append(tk.Entry(canvas, width="10"))
-            canvas.create_window(x_position+25, y_position+25, window=Main.solutions_data[k][4])
+            canvas.create_window(x_position+(radius/2), y_position+(radius/2), window=Main.solutions_data[k][4])
 
     def get_max(self, dictionary):
         max_x = 0
@@ -144,8 +145,9 @@ class StartPage(tk.Frame):
         max_x, max_y = self.get_max(Main.eppendorf_data)
         for k,v in Main.eppendorf_data.items():
             # generate the position of the circles
-            x_position = (canvas.width/(max_x+1))*v[2]
-            y_position = ((canvas.height)/(max_y+1))*v[3]
+            #TODO: Look into direct mapping instead of grid mode
+            x_position = ((canvas.width-radius)/(max_x+1))*v[2]
+            y_position = ((canvas.height-radius)/(max_y+1))*v[3]
             # instantiate the buttons as false and write to eppendorf data (this is 4 on the list)
             Main.eppendorf_data[k].append(False)
             # write the button object to the eppendorf data (this is 5 on the list)
