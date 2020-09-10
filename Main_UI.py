@@ -115,9 +115,8 @@ class StartPage(tk.Frame):
             canvas.create_oval(x_position, y_position, x_position+radius, y_position+radius, fill=color)
             label = tk.Label(canvas, text=k, bg=color)
             canvas.create_window(x_position+25, y_position+15, window=label)
-            locals()[k] = tk.Entry(width="10")
-            canvas.create_window(x_position+25, y_position+25, window=locals()[k])
-
+            Main.solutions_data[k].append(tk.Entry(width="10"))
+            canvas.create_window(x_position+25, y_position+25, window=Main.solutions_data[k][4])
 
     def get_max(self, dictionary):
         max_x = 0
@@ -131,6 +130,10 @@ class StartPage(tk.Frame):
         return max_x, max_y
 
     def add_solutions(self):
+        #TODO add add_solutions functionality
+        pass
+
+    def eppendorf_circles(self, canvas):
         pass
 
     # this is just code to change the frames and toggle the button text
