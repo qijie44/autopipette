@@ -64,13 +64,26 @@ class StartPage(tk.Frame):
         self.solutions_frame = self.button_frame("solution")
         self.information_frame = tk.Frame(self, bg="grey")
         self.options_frame = tk.Frame(self)
-
         self.eppendorf_frame.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
         self.solutions_frame.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
         self.information_frame.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
         self.options_frame.grid(row=2, column=1, padx=5, pady=5, sticky="ne")
 
+        # Populating the information frame
+        eppendorf_label = tk.Label(self.information_frame, text="None Selected")
+        label.grid(columnspan=3)
+        row = 0
+        for k, v in Main.solutions_data.items():
+            solution_label = tk.Label(self.information_frame, text=k)
+            solution_label.grid(row=row, column=0)
+            # creating the entry boxes and tying them to the solutions data dictionary (this is 4 on the list)
+            Main.solutions_data[k].append(tk.Entry(self.information_frame))
+
+
+
+
         # TODO: Update the function below after writing the change_config function
+        # Populating the options frame
         self.load_eppendorf_config_button = tk.Button(self.options_frame, text="Load eppendorfs",
                                                       command=lambda: self.change_configs("eppendorfs"))
         self.load_solutions_config_button = tk.Button(self.options_frame, text="Load solutions",
@@ -83,8 +96,6 @@ class StartPage(tk.Frame):
         self.load_solutions_config_button.grid(row=0, column=1)
         self.information_toggle_button.grid(row=0, column=2)
         self.save_to_file_button.grid(row=0, column=3)
-
-        #info_label = Label
 
         self.eppendorf_frame.tkraise()
         self.solutions_frame.tkraise()
@@ -174,6 +185,8 @@ class StartPage(tk.Frame):
         if self.info_frame:
             self.info_frame = False
             self.information_toggle_button.config(text="Solutions")
+            for k, v in Main.solutions_data.items():
+                Main.solutions_data[k][4].delete(0, 'end')
             self.information_frame.tkraise()
         else:
             self.info_frame = True
