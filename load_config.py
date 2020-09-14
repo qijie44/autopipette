@@ -24,9 +24,9 @@ def load_config(filename):
             named_coordinates = {}
 
             for row in file:
-                if row[0] not in x_coordinates:
+                if float(row[0]) not in x_coordinates:
                     x_coordinates.append(float(row[0]))
-                if row[1] not in y_coordinates:
+                if float(row[1]) not in y_coordinates:
                     y_coordinates.append(float(row[1]))
 
             # sorting the coordinates so that we know what's the name
