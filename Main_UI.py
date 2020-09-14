@@ -153,13 +153,27 @@ class StartPage(tk.Frame):
         return max_x, max_y
 
     def add_solutions(self):
-        #TODO add add_solutions functionality
-        print("hi")
-        pass
-
+        for k, v in Main.eppendorf_data.items():
+            if Main.eppendorf_data[k][4]:
+                for solutions, data in Main.solutions_data.items():
+                    #if there's data in the entry
+                    if len(data[4].get()) > 0:
+                        if self.check_entry(len(data[4].get())):
+                            Main.eppendorf_data[k][6][solutions] += float(data[4].get())
+                        else:
+                            #TODO raise error window
+                            pass
     def save_solutions(self):
-        #TODO add save_solutions functionality
-        pass
+        for k, v in Main.eppendorf_data.items():
+            if Main.eppendorf_data[k][4]:
+                for solutions, data in Main.solutions_data.items():
+                    # if there's data in the entry
+                    if len(data[5].get()) > 0:
+                        if self.check_entry(len(data[5].get())):
+                            Main.eppendorf_data[k][6][solutions] = float(data[5].get())
+                        else:
+                            #TODO raise error window
+                            pass
 
     def check_entry(self, entry):
         try:
