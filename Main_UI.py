@@ -3,6 +3,7 @@ from load_config import load_config
 
 unselected_color = "white"
 selected_color = "grey"
+GIANT_FONT = ("Helvetica", 20, "bold")
 
 class Main(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -47,10 +48,12 @@ class Main(tk.Tk):
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Automated Pipetting Controller", anchor="center")
+        label = tk.Label(self, text="Automated Pipetting Controller", anchor="center", font=GIANT_FONT)
         label.grid(columnspan=2)
         # just a boolean to keep check of the info_frame
-        self.info_frame = True
+        self.info_frame = False
+        self.eppendorf_canvas = None
+        self.eppendorf_label = None
 
         # Making that the rows and columns are a percentage of the screens
         self.grid_rowconfigure(0, weight=1)
@@ -70,16 +73,18 @@ class StartPage(tk.Frame):
         self.options_frame.grid(row=2, column=1, padx=5, pady=5, sticky="ne")
 
         # Populating the information frame
-        eppendorf_label = tk.Label(self.information_frame, text="None Selected")
-        label.grid(columnspan=3)
-        row = 0
+        self.eppendorf_label = tk.Label(self.information_frame, text="None Selected", font=GIANT_FONT)
+        self.eppendorf_label.grid(row=0, column=0, columnspan=3, sticky="nsew")
+        row = 1
         for k, v in Main.solutions_data.items():
             solution_label = tk.Label(self.information_frame, text=k)
             solution_label.grid(row=row, column=0)
-            # creating the entry boxes and tying them to the solutions data dictionary (this is 4 on the list)
+            # creating the entry boxes and tying them to the solutions data dictionary (this is 5 on the list)
             Main.solutions_data[k].append(tk.Entry(self.information_frame))
-
-
+            Main.solutions_data[k][5].grid(row=row, column=1)
+            row += 1
+        save_solution = tk.Button(self.information_frame, text="Save solutions", command=self.save_solutions)
+        save_solution.grid(row=row, column=3)
 
 
         # TODO: Update the function below after writing the change_config function
@@ -107,6 +112,7 @@ class StartPage(tk.Frame):
 
         if frame_type == "eppendorf":
             self.eppendorf_circles(button_canvas)
+            self.eppendorf_canvas = button_canvas
         elif frame_type == "solution":
             self.solutions_circle(button_canvas)
             add_solution_button = tk.Button(frame, text="Add Solutions", command=self.add_solutions)
@@ -151,6 +157,17 @@ class StartPage(tk.Frame):
         print("hi")
         pass
 
+    def save_solutions(self):
+        #TODO add save_solutions functionality
+        pass
+
+    def check_entry(self, entry):
+        try:
+            float(entry)
+            return True
+        except:
+            return False
+
     def eppendorf_circles(self, canvas):
         radius = 10
         max_x, max_y = self.get_max(Main.eppendorf_data)
@@ -164,33 +181,54 @@ class StartPage(tk.Frame):
             # write the button object to the eppendorf data (this is 5 on the list)
             Main.eppendorf_data[k].append(canvas.create_oval(x_position, y_position, x_position+radius, y_position+radius, fill=unselected_color))
             canvas.tag_bind(Main.eppendorf_data[k][5], "<Button-1>", lambda event, k=k, canvas=canvas: self.eppendorf_toggle(canvas, k))
+            solutions_dictionary = {}
+            for solutions, value in Main.solutions_data.items():
+                solutions_dictionary[solutions] = 0
+            Main.eppendorf_data[k].append(solutions_dictionary)
 
     # toggles the value of the eppendorf button and runs the set color function
     def eppendorf_toggle(self, canvas, k):
-        if Main.eppendorf_data[k][4]:
-            Main.eppendorf_data[k][4] = False
-        else:
+        if self.info_frame:
+            self.clear_eppendorf_toggle()
+            self.eppendorf_label.config(text=k)
             Main.eppendorf_data[k][4] = True
-        self.set_color(canvas)
+            for solutions, volume in Main.eppendorf_data[k][6].items():
+                Main.solutions_data[solutions][5].delete(0, "end")
+                Main.solutions_data[solutions][5].insert(0, str(volume))
+        else:
+            if Main.eppendorf_data[k][4]:
+                Main.eppendorf_data[k][4] = False
+            else:
+                Main.eppendorf_data[k][4] = True
+        self.set_color()
 
-    def set_color(self, canvas):
+    def clear_eppendorf_toggle(self):
+        for k, v in Main.eppendorf_data.items():
+            Main.eppendorf_data[k][4] = False
+
+    def set_color(self):
         for k,v in Main.eppendorf_data.items():
             if Main.eppendorf_data[k][4]:
-                canvas.itemconfig(Main.eppendorf_data[k][5], fill=selected_color)
+                self.eppendorf_canvas.itemconfig(Main.eppendorf_data[k][5], fill=selected_color)
             else:
-                canvas.itemconfig(Main.eppendorf_data[k][5], fill=unselected_color)
+                self.eppendorf_canvas.itemconfig(Main.eppendorf_data[k][5], fill=unselected_color)
 
     # this is just code to change the frames and toggle the button text
     def toggle_info_frame(self):
-        if self.info_frame:
-            self.info_frame = False
+        if not self.info_frame:
+            self.info_frame = True
+            self.clear_eppendorf_toggle()
             self.information_toggle_button.config(text="Solutions")
             for k, v in Main.solutions_data.items():
-                Main.solutions_data[k][4].delete(0, 'end')
+                Main.solutions_data[k][5].delete(0, 'end')
+            self.set_color()
             self.information_frame.tkraise()
         else:
-            self.info_frame = True
+            self.info_frame = False
             self.information_toggle_button.config(text="Information")
+            for k, v in Main.solutions_data.items():
+                Main.solutions_data[k][4].delete(0, 'end')
+            self.set_color()
             self.solutions_frame.tkraise()
 
     def change_configs(self, temp):
