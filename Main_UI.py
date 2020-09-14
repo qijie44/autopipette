@@ -197,7 +197,7 @@ class StartPage(tk.Frame):
             canvas.tag_bind(Main.eppendorf_data[k][5], "<Button-1>", lambda event, k=k, canvas=canvas: self.eppendorf_toggle(canvas, k))
             solutions_dictionary = {}
             for solutions, value in Main.solutions_data.items():
-                solutions_dictionary[solutions] = 0
+                solutions_dictionary[solutions] = 0.0
             Main.eppendorf_data[k].append(solutions_dictionary)
 
     # toggles the value of the eppendorf button and runs the set color function
