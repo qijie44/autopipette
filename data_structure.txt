@@ -1,0 +1,16 @@
+Main.eppendorf_data, for each eppendorf
+[0]: x coordinates
+[1]: y coordinates
+[2]: x value in the button grid
+[3]: y value in the button grid
+[4]: value to save if the button is toggled true
+[5]: the circle on the eppendorf tab
+[6]: the solutions that are in the eppendorf (dictionary)
+
+Main.solutions_data, for each solution
+[0]: x coordinates
+[1]: y coordinates
+[2]: x value in the button grid
+[3]: y value in the button grid
+[4]: the entry on the solutions tab
+[5]: the entry on the information tab
