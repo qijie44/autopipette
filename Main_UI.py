@@ -225,6 +225,7 @@ class StartPage(tk.Frame):
             self.information_frame.tkraise()
         else:
             self.info_frame = False
+            self.clear_eppendorf_toggle()
             self.information_toggle_button.config(text="Information")
             for k, v in Main.solutions_data.items():
                 Main.solutions_data[k][4].delete(0, 'end')
